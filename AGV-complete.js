@@ -436,7 +436,7 @@ class CN_Location extends Connector {
     });
   }
 }
-class CN_Atach extends Connector {
+class CN_Attach extends Connector {
   constructor(name, opts = {}) {
     super(name, {
       ...opts,
@@ -1727,7 +1727,7 @@ function createModel(){
     CN_Notify,
     CN_Command,
     CN_Location,
-    CN_Atach,
+    CN_Attach,
     CN_Detach,
     CT_ComponentsAGV_SendStartMotorEQ,
     CT_ComponentsAGV_SendDestinationEQ,

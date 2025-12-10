@@ -143,7 +143,7 @@ package ConnectorsAGV {
 		}
 		~ cmIPT : inCommandToMotor {
 		}
-		flows: cmOPT to cmIPT
+		flows: /*Se der um Ctrl+space aqui ele n�o mostra as op��es do escopo*/ CommandToMotor from /*Se der um Ctrl+space aqui ele n�o mostra as op��es do escopo*/ cmOPT to cmIPT
 	}
 	connector def interactionAGVAndSupervisory {
 		participants: ~ iagvs : IAGVSystem {
@@ -152,7 +152,7 @@ package ConnectorsAGV {
 		}
 		configuration {
 			connectors:
-			nS : notifySupervisory bindings outNotifications = inNotifications; 
+			nS : notifySupervisory bindings /*Se der um Ctrl+space aqui ele n�o mostra as op��es do escopo*/ outNotifications = inNotifications; 
 			sVD : sendVehicleData bindings outMoveToStation = inMoveToStation;
 		}
 	}
@@ -249,9 +249,9 @@ package ComponentsAGV {
 			ackArm : notificationArm bindings started = startedArm; 
 			cmdArm : commandArm bindings startArm = start;
 			ackMotor : notificationMotor bindings started_stopped_out = started_stopped_in;
-			cmdMotor : commandMotor bindings start_stop_out = start_stop_in;
+			cmdMotor : commandMotor bindings /*Se der um Ctrl+space aqui ele n�o mostra as op��es do escopo apesar de s� aceitar as op��es definidas no escopo*/ start_stop_out = start_stop_in;
 			delegations:
-			sendStatus to sendStatus 
+			/*Se der um Ctrl+space aqui ele n�o mostra as op��es do escopo apesar de s� aceitar as op��es definidas no escopo*/ sendStatus to sendStatus 
 			in_outData to in_outData
 		}
 	}
@@ -572,7 +572,7 @@ action def SendStartMotorAN ( move : VehicleData ) : CommandToMotor {
 	}
 	constraint SendStartMotorEQ () : 
 		(cmd : CommandToMotor) {
-			equation = cmd == CommandToMotor::start
+			equation = cmd == /*Se der um Ctrl+space aqui ele n�o mostra as op��es do escopo*/ CommandToMotor::start
 		}
 	constraint SendDestinationEQ ( move : VehicleData ) :
 		(destination : Location) {
@@ -820,7 +820,7 @@ EnvironmentDefinition MyFactory {
 		from Station.signal to Vehicle.sensor
 	}
 
-	EnvConnector def Atach {
+	EnvConnector def Attach {
 		from Vehicle.arm to PartX.surface
 	}
 
@@ -928,7 +928,7 @@ EventsDefinitions MyEvents to MyFactoryConfiguration {
       THEN AGV1NotifArriveA {				 
         agv1.outNotification.notification="arrived";
         :Notify(agv1, supervisor); }
-    ON AGV1atachPartX					 
+    ON AGV1attachPartX					 
       THEN AGV1NotifLoad {
         agv1.outNotification.notification="loaded";
         :Notify(agv1, supervisor); }
@@ -949,7 +949,7 @@ EventsDefinitions MyEvents to MyFactoryConfiguration {
       THEN AGV2NotifArriveC {	
         agv2.outNotification.notification="arrived";
         :Notify(agv2, supervisor); }
-    ON AGV2atachPartX
+    ON AGV2attachPartX
       THEN AGV2NotifLoad {
         agv2.outNotification.notification="loaded";
         :Notify(agv2, supervisor); }
@@ -1003,14 +1003,14 @@ EventsDefinitions MyEvents to MyFactoryConfiguration {
   }
   Event def PartXEvents for part {
     ON cmdAGV1loadA					 
-      THEN AGV1atachPartX {
-        :Atach(agv1, part); }
+      THEN AGV1attachPartX {
+        :Attach(agv1, part); }
     ON cmdAGV1UnloadA					 
       THEN AGV1detachPartX {
         :Detach(agv1, part); }
     ON cmdAGV2loadC					 
-      THEN AGV2atachPartX {
-        :Atach(agv2, part); }
+      THEN AGV2attachPartX {
+        :Attach(agv2, part); }
     ON cmdAGV2UnloadE					 
       THEN AGV2detachPartX {
         :Detach(agv2, part); }
@@ -1094,8 +1094,10 @@ ScenarioExecution to MyScenarios {
   agv2.location = stationD.ID;
   part.location = stationA.ID;
   
+  // ✅ Exemplo 1: Disparar após scene específica
   inject AGV2atStationD after SCN_MoveAGV1toA;
   
+  // ✅ Exemplo 2: Disparar quando condição for atendida  
   inject SetAGV2SensorStationD when agv1.location == stationA.ID;
   
   inject AGV1atStationA after cmdAGV1toA;
